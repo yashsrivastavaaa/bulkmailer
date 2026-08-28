@@ -1,532 +1,195 @@
-/* =========================================================
-   BULKMAILER — SHARED LEGAL / TERMS UI
-   ========================================================= */
-
-.legal - page {
-  min - height: 100vh;
-  background:
-  radial - gradient(circle at 10 % 0 %, rgba(124, 92, 255, .08), transparent 28 %),
-    radial - gradient(circle at 90 % 10 %, rgba(72, 125, 255, .07), transparent 25 %),
-    var(--bg, #f7f8fc);
-  color: var(--text, #172033);
-}
-
-.legal - nav {
-  width: min(1180px, calc(100 % - 32px));
-  height: 76px;
-  margin: auto;
-  padding: 0 12px;
-  display: flex;
-  align - items: center;
-  justify - content: space - between;
-}
-
-.legal - brand {
-  display: inline - flex;
-  align - items: center;
-  gap: 11px;
-  color: #151b2c;
-  text - decoration: none;
-  font - size: 18px;
-  font - weight: 800;
-  letter - spacing: -.035em;
-}
-
-.legal - brand - icon {
-  width: 37px;
-  height: 37px;
-  display: grid;
-  place - items: center;
-  border - radius: 12px;
-  color: white;
-  background: linear - gradient(135deg, #625ce9, #8b6cff);
-  box - shadow: 0 9px 26px rgba(98, 83, 232, .25);
-}
-
-.legal - back {
-  color: #586176;
-  text - decoration: none;
-  font - size: 13px;
-  font - weight: 700;
-  transition: .2s ease;
-}
-
-.legal - back:hover {
-  color: #5d54d9;
-  transform: translateX(-2px);
-}
-
-.legal - hero {
-  width: min(1180px, calc(100 % - 32px));
-  min - height: 310px;
-  margin: 0 auto;
-  padding: 62px 72px;
-  position: relative;
-  overflow: hidden;
-  border: 1px solid rgba(120, 128, 160, .13);
-  border - radius: 29px;
-  background:
-  radial - gradient(circle at 85 % 45 %, rgba(112, 100, 244, .14), transparent 27 %),
-    linear - gradient(135deg, #fbfbff, #f0f2ff);
-  box - shadow: 0 22px 60px rgba(35, 43, 75, .07);
-}
-
-.legal - hero - content {
-  max - width: 650px;
-  position: relative;
-  z - index: 2;
-}
-
-.legal - eyebrow {
-  display: inline - flex;
-  padding: 7px 12px;
-  border - radius: 999px;
-  background: #eee9ff;
-  color: #6753d9;
-  font - size: 10px;
-  font - weight: 850;
-  letter - spacing: .13em;
-}
-
-.legal - hero h1 {
-  margin: 19px 0 13px;
-  color: #151d32;
-  font - size: clamp(42px, 5vw, 62px);
-  line - height: .98;
-  letter - spacing: -.055em;
-}
-
-.legal - hero p {
-  margin: 0;
-  max - width: 650px;
-  color: #586277;
-  font - size: 16px;
-  line - height: 1.7;
-}
-
-.legal - updated {
-  display: flex;
-  align - items: center;
-  gap: 8px;
-  margin - top: 24px;
-  color: #737c90;
-  font - size: 12px;
-  font - weight: 650;
-}
-
-.legal - hero - art {
-  position: absolute;
-  top: 50 %;
-  right: 10 %;
-  width: 230px;
-  height: 230px;
-  transform: translateY(-50 %);
-  display: grid;
-  place - items: center;
-}
-
-.legal - document {
-  width: 145px;
-  height: 175px;
-  border - radius: 19px;
-  border: 1px solid rgba(111, 105, 193, .18);
-  background: linear - gradient(145deg, rgba(255, 255, 255, .85), rgba(216, 219, 244, .5));
-  box - shadow: 0 25px 55px rgba(76, 80, 147, .13);
-  display: grid;
-  place - items: center;
-  color: #6b5bd5;
-  font - size: 43px;
-  transform: rotate(3deg);
-}
-
-.legal - layout {
-  width: min(1180px, calc(100 % - 32px));
-  margin: 26px auto 0;
-  display: grid;
-  grid - template - columns: 250px minmax(0, 1fr);
-  gap: 28px;
-  align - items: start;
-}
-
-.legal - sidebar {
-  position: sticky;
-  top: 20px;
-}
-
-.legal - toc {
-  padding: 18px 12px;
-  border: 1px solid rgba(120, 128, 160, .13);
-  border - radius: 20px;
-  background: rgba(255, 255, 255, .78);
-  backdrop - filter: blur(18px);
-  box - shadow: 0 12px 35px rgba(35, 43, 75, .05);
-}
-
-.legal - toc - title {
-  padding: 4px 12px 12px;
-  color: #8a92a5;
-  font - size: 10px;
-  font - weight: 850;
-  letter - spacing: .11em;
-}
-
-.legal - toc a {
-  display: block;
-  padding: 9px 12px;
-  border - radius: 10px;
-  color: #596277;
-  text - decoration: none;
-  font - size: 12px;
-  font - weight: 620;
-  transition: .2s ease;
-}
-
-.legal - toc a:hover {
-  color: #5d53da;
-  background: #f3f0ff;
-  transform: translateX(2px);
-}
-
-.legal - note {
-  display: flex;
-  gap: 12px;
-  margin - top: 14px;
-  padding: 17px;
-  border: 1px solid rgba(110, 92, 220, .13);
-  border - radius: 18px;
-  background: linear - gradient(145deg, #faf9ff, #f3f1ff);
-}
-
-.legal - note - icon {
-  width: 30px;
-  height: 30px;
-  flex: 0 0 auto;
-  display: grid;
-  place - items: center;
-  border - radius: 10px;
-  background: #e7e1ff;
-  color: #6855d9;
-  font - weight: 850;
-}
-
-.legal - note strong {
-  color: #222a40;
-  font - size: 12px;
-}
-
-.legal - note p {
-  margin: 5px 0 0;
-  color: #697187;
-  font - size: 11px;
-  line - height: 1.6;
-}
-
-.legal - card {
-  display: grid;
-  grid - template - columns: 56px minmax(0, 1fr);
-  gap: 22px;
-  margin - bottom: 14px;
-  padding: 33px 37px;
-  border: 1px solid rgba(120, 128, 160, .13);
-  border - radius: 22px;
-  background: rgba(255, 255, 255, .82);
-  backdrop - filter: blur(18px);
-  box - shadow: 0 12px 35px rgba(35, 43, 75, .045);
-  scroll - margin - top: 24px;
-}
-
-.legal - card - icon {
-  width: 51px;
-  height: 51px;
-  display: grid;
-  place - items: center;
-  border - radius: 17px;
-  font - size: 21px;
-  font - weight: 850;
-}
-
-.legal - card - icon.purple {
-  background: #eee7ff;
-  color: #7654dc;
-}
-
-.legal - card - icon.blue {
-  background: #eaf0ff;
-  color: #4268d8;
-}
-
-.legal - card - icon.green {
-  background: #e5f8ee;
-  color: #15955c;
-}
-
-.legal - card - icon.orange {
-  background: #fff1df;
-  color: #d07a2d;
-}
-
-.legal - card - icon.red {
-  background: #ffebeb;
-  color: #d34d5b;
-}
-
-.legal - card h2 {
-  margin: 1px 0 11px;
-  color: #182137;
-  font - size: 21px;
-  line - height: 1.25;
-  letter - spacing: -.025em;
-}
-
-.legal - card p {
-  margin: 0 0 13px;
-  color: #5e687e;
-  font - size: 14px;
-  line - height: 1.78;
-}
-
-.legal - card ul {
-  margin: 12px 0 16px;
-  padding - left: 19px;
-  color: #5e687e;
-}
-
-.legal - card li {
-  margin: 8px 0;
-  font - size: 14px;
-  line - height: 1.65;
-}
-
-.legal - inline - link {
-  display: inline - flex;
-  margin - top: 3px;
-  color: #5b52d1;
-  font - size: 13px;
-  font - weight: 750;
-  text - decoration: none;
-}
-
-.legal - inline - link:hover {
-  text - decoration: underline;
-}
-
-.legal - mini - grid {
-  display: grid;
-  grid - template - columns: repeat(3, 1fr);
-  gap: 14px;
-  margin: 14px 0;
-}
-
-.legal - mini - card {
-  padding: 25px;
-  border: 1px solid rgba(120, 128, 160, .13);
-  border - radius: 20px;
-  background: rgba(255, 255, 255, .82);
-  box - shadow: 0 12px 35px rgba(35, 43, 75, .045);
-  scroll - margin - top: 24px;
-}
-
-.legal - mini - icon {
-  width: 34px;
-  height: 34px;
-  display: grid;
-  place - items: center;
-  margin - bottom: 17px;
-  border - radius: 11px;
-  background: #edf0ff;
-  color: #5f63d7;
-  font - size: 12px;
-}
-
-.legal - mini - icon.green {
-  background: #e5f8ee;
-  color: #15955c;
-}
-
-.legal - mini - icon.orange {
-  background: #fff1df;
-  color: #d07a2d;
-}
-
-.legal - mini - card h2 {
-  margin: 0 0 9px;
-  color: #202940;
-  font - size: 15px;
-}
-
-.legal - mini - card p {
-  margin: 0;
-  color: #697287;
-  font - size: 12px;
-  line - height: 1.7;
-}
-
-.legal - contact {
-  display: flex;
-  align - items: center;
-  gap: 18px;
-  margin - top: 14px;
-  padding: 27px 30px;
-  border: 1px solid rgba(100, 96, 210, .15);
-  border - radius: 21px;
-  background: linear - gradient(135deg, #f7f6ff, #f1f5ff);
-  scroll - margin - top: 24px;
-}
-
-.legal - contact - icon {
-  width: 48px;
-  height: 48px;
-  flex: 0 0 auto;
-  display: grid;
-  place - items: center;
-  border - radius: 15px;
-  background: #e9e7ff;
-  color: #6257d6;
-  font - size: 21px;
-}
-
-.legal - contact h2 {
-  margin: 0 0 6px;
-  color: #20283d;
-  font - size: 17px;
-}
-
-.legal - contact p {
-  margin: 0 0 7px;
-  color: #626d82;
-  font - size: 13px;
-}
-
-.legal - contact a {
-  color: #5b52d1;
-  font - size: 13px;
-  font - weight: 750;
-  text - decoration: none;
-}
-
-.legal - footer {
-  width: min(1180px, calc(100 % - 32px));
-  margin: 34px auto 0;
-  padding: 27px 0 45px;
-  display: flex;
-  align - items: center;
-  justify - content: space - between;
-  gap: 20px;
-  border - top: 1px solid rgba(120, 128, 160, .12);
-  color: #8991a4;
-  font - size: 12px;
-}
-
-.legal - footer > div: first - child {
-  display: flex;
-  align - items: center;
-  gap: 9px;
-}
-
-.legal - footer strong {
-  color: #4d566b;
-}
-
-.legal - footer - links {
-  display: flex;
-  gap: 18px;
-}
-
-.legal - footer - links a {
-  color: #697287;
-  text - decoration: none;
-  font - weight: 650;
-}
-
-.legal - footer - links a:hover {
-  color: #5b52d1;
-}
-
-.legal - copyright {
-  white - space: nowrap;
-}
-
-@media(max - width: 900px) {
-  .legal - hero - art {
-    display: none;
-  }
-
-  .legal - hero {
-    padding: 45px 30px;
-  }
-
-  .legal - layout {
-    grid - template - columns: 1fr;
-  }
-
-  .legal - sidebar {
-    position: static;
-  }
-
-  .legal - toc {
-    display: none;
-  }
-
-  .legal - note {
-    margin - bottom: 14px;
-  }
-
-  .legal - mini - grid {
-    grid - template - columns: 1fr;
-  }
-
-  .legal - footer {
-    flex - wrap: wrap;
-  }
-}
-
-@media(max - width: 600px) {
-  .legal - nav {
-    padding: 0 5px;
-  }
-
-  .legal - back {
-    font - size: 12px;
-  }
-
-  .legal - hero {
-    padding: 38px 24px;
-    border - radius: 22px;
-  }
-
-  .legal - hero h1 {
-    font - size: 42px;
-  }
-
-  .legal - hero p {
-    font - size: 15px;
-  }
-
-  .legal - card {
-    grid - template - columns: 1fr;
-    padding: 27px 22px;
-  }
-
-  .legal - card h2 {
-    font - size: 19px;
-  }
-
-  .legal - card p,
-  .legal - card li {
-    font - size: 13px;
-  }
-
-  .legal - contact {
-    align - items: flex - start;
-    padding: 22px;
-  }
-
-  .legal - footer {
-    flex - direction: column;
-    align - items: flex - start;
-  }
-
-  .legal - copyright {
-    white - space: normal;
-  }
+import Link from 'next/link';
+
+const sections = [
+  ['overview', 'Overview'],
+  ['acceptable-use', 'Acceptable use'],
+  ['account', 'Google account'],
+  ['campaigns', 'Campaigns & content'],
+  ['sending', 'Email sending'],
+  ['plans', 'Plans & limits'],
+  ['data', 'Data & privacy'],
+  ['availability', 'Service availability'],
+  ['liability', 'Limitation of liability'],
+  ['changes', 'Changes to terms'],
+  ['contact', 'Contact'],
+];
+
+export default function Terms() {
+  return (
+    <main className="legal-page">
+      <header className="legal-nav">
+        <Link href="/" className="legal-brand">
+          <span className="legal-brand-icon">✉</span>
+          <span>Bulkmailer</span>
+        </Link>
+        <Link href="/" className="legal-back">← Back to Bulkmailer</Link>
+      </header>
+
+      <section className="legal-hero">
+        <div className="legal-hero-content">
+          <span className="legal-eyebrow">LEGAL</span>
+          <h1>Terms of Service</h1>
+          <p>
+            These terms explain the rules for using Bulkmailer, including your
+            responsibilities when creating, managing, and sending email campaigns.
+          </p>
+          <div className="legal-updated"><span>◷</span> Last updated: August 28, 2026</div>
+        </div>
+        <div className="legal-hero-art" aria-hidden="true">
+          <div className="legal-document"><span>✓</span></div>
+        </div>
+      </section>
+
+      <div className="legal-layout">
+        <aside className="legal-sidebar">
+          <nav className="legal-toc" aria-label="Terms sections">
+            <div className="legal-toc-title">ON THIS PAGE</div>
+            {sections.map(([id, label]) => <a key={id} href={`#${id}`}>{label}</a>)}
+          </nav>
+          <div className="legal-note">
+            <div className="legal-note-icon">!</div>
+            <div>
+              <strong>Use Bulkmailer responsibly</strong>
+              <p>You are responsible for your campaigns, recipients, content, and compliance with applicable laws.</p>
+            </div>
+          </div>
+        </aside>
+
+        <article className="legal-content">
+          <section id="overview" className="legal-card">
+            <div className="legal-card-icon purple">§</div>
+            <div>
+              <h2>Overview</h2>
+              <p>Bulkmailer is an email campaign workspace that allows users to connect their Google account, import recipient data, create personalized campaigns, and send messages through authorized Google services.</p>
+              <p>By accessing or using Bulkmailer, you agree to these Terms of Service. If you do not agree with these terms, you should not use the service.</p>
+            </div>
+          </section>
+
+          <section id="acceptable-use" className="legal-card">
+            <div className="legal-card-icon red">!</div>
+            <div>
+              <h2>Acceptable use</h2>
+              <p>You must use Bulkmailer responsibly and in accordance with applicable laws, regulations, and the policies of the services you connect to Bulkmailer.</p>
+              <p>You must not use Bulkmailer for:</p>
+              <ul>
+                <li>Spam or unlawful unsolicited commercial messages.</li>
+                <li>Phishing, scams, fraud, or deceptive communications.</li>
+                <li>Impersonation of another person, company, or organization.</li>
+                <li>Malware, malicious links, or harmful content.</li>
+                <li>Harassment, threats, or abusive communications.</li>
+                <li>Content that violates applicable laws or third-party rights.</li>
+                <li>Attempts to bypass Gmail, Google, or Bulkmailer limits.</li>
+              </ul>
+            </div>
+          </section>
+
+          <section id="account" className="legal-card">
+            <div className="legal-card-icon blue">G</div>
+            <div>
+              <h2>Google account</h2>
+              <p>Bulkmailer allows you to connect a Google account using Google's OAuth authorization process.</p>
+              <p>You authorize Bulkmailer to perform the Google actions requested through the OAuth consent screen and explicitly initiated by you.</p>
+              <p>You are responsible for maintaining the security of your Google account. You may revoke Bulkmailer's access through your Google Account settings.</p>
+            </div>
+          </section>
+
+          <section id="campaigns" className="legal-card">
+            <div className="legal-card-icon purple">✎</div>
+            <div>
+              <h2>Campaigns &amp; content</h2>
+              <p>You are responsible for all information and material you upload or enter into Bulkmailer.</p>
+              <ul>
+                <li>Recipient email addresses and recipient lists.</li>
+                <li>Names and personalization fields.</li>
+                <li>Email subjects and message content.</li>
+                <li>Templates and campaign data.</li>
+                <li>Attachments and imported spreadsheet information.</li>
+              </ul>
+              <p>You must have the necessary rights, permissions, and lawful basis to use recipient information and send your messages.</p>
+            </div>
+          </section>
+
+          <section id="sending" className="legal-card">
+            <div className="legal-card-icon orange">➤</div>
+            <div>
+              <h2>Email sending</h2>
+              <p>Bulkmailer uses your authorized Google account to send messages that you explicitly initiate.</p>
+              <p>Actual delivery may depend on Gmail availability, account restrictions, recipient servers, spam filtering, quotas, and other factors outside Bulkmailer's control.</p>
+              <p>Bulkmailer does not guarantee that every message will be delivered, opened, or accepted by a recipient.</p>
+            </div>
+          </section>
+
+          <section id="plans" className="legal-card">
+            <div className="legal-card-icon green">◆</div>
+            <div>
+              <h2>Plans &amp; limits</h2>
+              <p>Bulkmailer may provide different account plans with different sending limits, recipient limits, attachment limits, and feature availability.</p>
+              <p>Your available limits and features are determined by the plan associated with your account and may be displayed in the Bulkmailer dashboard.</p>
+              <p>Bulkmailer may change, suspend, or discontinue a plan or feature where reasonably necessary to operate or improve the service.</p>
+            </div>
+          </section>
+
+          <section id="data" className="legal-card">
+            <div className="legal-card-icon blue">⌁</div>
+            <div>
+              <h2>Data &amp; privacy</h2>
+              <p>Your use of Bulkmailer is also governed by our Privacy Policy, which explains how account information, Google authorization data, recipient information, campaign data, and other information are processed.</p>
+              <Link href="/privacy" className="legal-inline-link">Read the Privacy Policy →</Link>
+            </div>
+          </section>
+
+          <section id="availability" className="legal-card">
+            <div className="legal-card-icon purple">◌</div>
+            <div>
+              <h2>Service availability</h2>
+              <p>We aim to keep Bulkmailer reliable and available, but the service may occasionally be unavailable because of maintenance, infrastructure issues, third-party services, network failures, or other circumstances.</p>
+              <p>Bulkmailer does not guarantee uninterrupted or error-free operation.</p>
+            </div>
+          </section>
+
+          <section id="liability" className="legal-card">
+            <div className="legal-card-icon red">◇</div>
+            <div>
+              <h2>Limitation of liability</h2>
+              <p>To the extent permitted by applicable law, Bulkmailer and its operator are not responsible for losses arising from misuse of the service, unlawful campaigns, recipient actions, Gmail or Google service interruptions, rejected messages, or circumstances outside the reasonable control of the service.</p>
+              <p>You remain responsible for ensuring that your use of Bulkmailer complies with applicable laws and third-party service policies.</p>
+            </div>
+          </section>
+
+          <div className="legal-mini-grid">
+            <section id="changes" className="legal-mini-card">
+              <div className="legal-mini-icon blue">✎</div>
+              <h2>Changes to terms</h2>
+              <p>We may update these terms when the service, features, or applicable requirements change. Updated terms will be published on this page.</p>
+            </section>
+            <section className="legal-mini-card">
+              <div className="legal-mini-icon green">✓</div>
+              <h2>Your responsibility</h2>
+              <p>Use accurate recipient information and send only messages you are authorized and legally permitted to send.</p>
+            </section>
+            <section className="legal-mini-card">
+              <div className="legal-mini-icon orange">→</div>
+              <h2>Google policies</h2>
+              <p>Your use of connected Google services remains subject to Google's applicable terms and policies.</p>
+            </section>
+          </div>
+
+          <section id="contact" className="legal-contact">
+            <div className="legal-contact-icon">✉</div>
+            <div>
+              <h2>Contact us</h2>
+              <p>Questions about these Terms of Service can be sent to:</p>
+              <a href="mailto:yashsrivns@gmail.com">yashsrivns@gmail.com</a>
+            </div>
+          </section>
+        </article>
+      </div>
+
+      <footer className="legal-footer">
+        <div><strong>Bulkmailer</strong><span>Simple email campaigns, responsibly.</span></div>
+        <div className="legal-footer-links"><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><Link href="/">Home</Link></div>
+        <div className="legal-copyright">© 2026 Bulkmailer. All rights reserved.</div>
+      </footer>
+    </main>
+  );
 }
