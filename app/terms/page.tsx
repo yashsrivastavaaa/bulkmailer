@@ -1,195 +1,386 @@
-import Link from 'next/link';
-
-const sections = [
-  ['overview', 'Overview'],
-  ['acceptable-use', 'Acceptable use'],
-  ['account', 'Google account'],
-  ['campaigns', 'Campaigns & content'],
-  ['sending', 'Email sending'],
-  ['plans', 'Plans & limits'],
-  ['data', 'Data & privacy'],
-  ['availability', 'Service availability'],
-  ['liability', 'Limitation of liability'],
-  ['changes', 'Changes to terms'],
-  ['contact', 'Contact'],
-];
+import Link from "next/link";
 
 export default function Terms() {
   return (
-    <main className="legal-page">
-      <header className="legal-nav">
-        <Link href="/" className="legal-brand">
-          <span className="legal-brand-icon">✉</span>
-          <span>Bulkmailer</span>
+    <main className="prose">
+      <Link className="back-home" href="/">
+        ← Back to Bulkmailer
+      </Link>
+
+      <div className="eyebrow">LEGAL</div>
+
+      <h1>Terms of Service</h1>
+
+      <p>
+        <strong>Last updated: August 28, 2026</strong>
+      </p>
+
+      <p>
+        These Terms of Service ("Terms") govern your access to and use of
+        Bulkmailer ("Bulkmailer", "we", "us", or "our"). Bulkmailer is a web
+        based email campaign workspace that allows users to connect an
+        authorized Google account, manage recipient information, create email
+        campaigns, and send messages through authorized Google services.
+      </p>
+
+      <p>
+        By accessing or using Bulkmailer, you agree to these Terms. If you do
+        not agree with these Terms, please do not use Bulkmailer.
+      </p>
+
+      <h2>1. Use of Bulkmailer</h2>
+
+      <p>
+        Bulkmailer provides tools for creating, managing, and sending email
+        campaigns. The service may allow you to import recipient information,
+        create personalized email content, attach files, and send messages
+        through a Google account that you have explicitly authorized.
+      </p>
+
+      <p>
+        You are responsible for using Bulkmailer only for lawful and legitimate
+        purposes and for complying with all applicable laws, regulations, and
+        third-party service policies.
+      </p>
+
+      <h2>2. Acceptable Use</h2>
+
+      <p>
+        You agree not to use Bulkmailer to send or facilitate communications
+        that are unlawful, fraudulent, abusive, deceptive, or harmful.
+      </p>
+
+      <p>You must not use Bulkmailer for:</p>
+
+      <ul>
+        <li>Spam or unlawful unsolicited commercial messages.</li>
+        <li>Phishing, scams, fraud, or deceptive communications.</li>
+        <li>Impersonating another person, company, or organization.</li>
+        <li>Malware, malicious links, or harmful software.</li>
+        <li>Harassment, threats, intimidation, or abusive communications.</li>
+        <li>Content that violates applicable laws or regulations.</li>
+        <li>Content that infringes another person's intellectual property,
+          privacy, or other legal rights.</li>
+        <li>Sending messages to recipients without an appropriate legal basis
+          or required permission.</li>
+        <li>Attempts to bypass Gmail, Google, Bulkmailer, or other service
+          limits and security controls.</li>
+        <li>Activities intended to disrupt, overload, or compromise the
+          Bulkmailer service or connected services.</li>
+      </ul>
+
+      <h2>3. Google Account and OAuth Authorization</h2>
+
+      <p>
+        Bulkmailer may allow you to connect a Google account using Google's
+        OAuth authorization process.
+      </p>
+
+      <p>
+        When you connect your Google account, you authorize Bulkmailer to use
+        the Google permissions displayed during the OAuth consent process.
+        These permissions are used to provide the functionality requested by
+        you.
+      </p>
+
+      <p>
+        For example, Gmail access may be used to send email messages that you
+        explicitly initiate through Bulkmailer.
+      </p>
+
+      <p>
+        You remain responsible for the security of your Google account and for
+        reviewing the permissions requested during Google's authorization
+        process.
+      </p>
+
+      <p>
+        You may revoke Bulkmailer's access to your Google account at any time
+        through your Google Account security settings.
+      </p>
+
+      <h2>4. Google Services and Third-Party Policies</h2>
+
+      <p>
+        Bulkmailer may rely on Google APIs and other third-party services to
+        provide certain features.
+      </p>
+
+      <p>
+        Your use of connected Google services remains subject to the applicable
+        Google terms, policies, quotas, and technical restrictions.
+      </p>
+
+      <p>
+        Bulkmailer does not control Google's availability, account restrictions,
+        sending quotas, spam filtering, or decisions made by Google or other
+        third-party services.
+      </p>
+
+      <h2>5. Campaigns and User Content</h2>
+
+      <p>
+        You are responsible for all information and content that you upload,
+        import, create, or enter into Bulkmailer.
+      </p>
+
+      <p>This may include:</p>
+
+      <ul>
+        <li>Recipient names and email addresses.</li>
+        <li>Recipient lists and personalization fields.</li>
+        <li>Email subjects and message content.</li>
+        <li>Email templates and campaign settings.</li>
+        <li>Attachments and imported spreadsheet information.</li>
+        <li>Other information that you intentionally provide to the service.</li>
+      </ul>
+
+      <p>
+        You represent that you have the necessary rights, permissions, and
+        lawful basis to use recipient information and to send communications to
+        the recipients you select.
+      </p>
+
+      <h2>6. Responsibility for Email Content</h2>
+
+      <p>
+        You are solely responsible for the content of emails sent using your
+        Bulkmailer account and connected Google account.
+      </p>
+
+      <p>
+        Bulkmailer does not endorse or take responsibility for user-generated
+        campaign content. You must ensure that your campaigns comply with
+        applicable laws, regulations, advertising requirements, privacy
+        requirements, and anti-spam rules.
+      </p>
+
+      <p>
+        You should provide recipients with any disclosures, unsubscribe
+        mechanisms, consent notices, or other information required by the laws
+        applicable to your communications.
+      </p>
+
+      <h2>7. Email Sending</h2>
+
+      <p>
+        Bulkmailer uses your authorized Google account to send messages that
+        you explicitly initiate.
+      </p>
+
+      <p>
+        Bulkmailer does not guarantee that every message will be delivered,
+        opened, read, or accepted by a recipient.
+      </p>
+
+      <p>
+        Delivery may be affected by Gmail or Google availability, account
+        restrictions, sending quotas, recipient mail servers, spam filters,
+        invalid recipient addresses, network conditions, and other factors
+        outside Bulkmailer's reasonable control.
+      </p>
+
+      <h2>8. Sending Limits and Quotas</h2>
+
+      <p>
+        Bulkmailer may impose limits on campaigns, recipients, attachments,
+        sending frequency, or other features.
+      </p>
+
+      <p>
+        Google may also impose independent limits or restrictions on accounts
+        and API usage. Bulkmailer does not provide a method to bypass Google's
+        sending limits, quotas, or security controls.
+      </p>
+
+      <p>
+        Attempting to circumvent applicable limits may result in suspension or
+        termination of access to Bulkmailer.
+      </p>
+
+      <h2>9. Account Security</h2>
+
+      <p>
+        You are responsible for maintaining the security of your Bulkmailer
+        account and the Google account connected to it.
+      </p>
+
+      <p>
+        You should not share authentication credentials, OAuth authorization
+        information, or account access with unauthorized individuals.
+      </p>
+
+      <p>
+        If you believe that your account or connected Google account has been
+        accessed without authorization, you should take appropriate steps to
+        secure the account and contact Bulkmailer.
+      </p>
+
+      <h2>10. Plans and Feature Limits</h2>
+
+      <p>
+        Bulkmailer may offer different plans or usage levels with different
+        features, sending limits, recipient limits, attachment limits, or other
+        restrictions.
+      </p>
+
+      <p>
+        Your available features and limits may be displayed within the
+        Bulkmailer dashboard.
+      </p>
+
+      <p>
+        We may modify, suspend, or discontinue a plan or feature when reasonably
+        necessary to operate, secure, maintain, or improve the service.
+      </p>
+
+      <h2>11. Data and Privacy</h2>
+
+      <p>
+        Your use of Bulkmailer is also governed by our Privacy Policy. The
+        Privacy Policy explains how Bulkmailer processes account information,
+        Google authorization data, recipient information, campaign content,
+        attachments, and other information.
+      </p>
+
+      <p>
+        <Link href="/privacy" className="back-home">
+          Read our Privacy Policy →
         </Link>
-        <Link href="/" className="legal-back">← Back to Bulkmailer</Link>
-      </header>
+      </p>
 
-      <section className="legal-hero">
-        <div className="legal-hero-content">
-          <span className="legal-eyebrow">LEGAL</span>
-          <h1>Terms of Service</h1>
-          <p>
-            These terms explain the rules for using Bulkmailer, including your
-            responsibilities when creating, managing, and sending email campaigns.
-          </p>
-          <div className="legal-updated"><span>◷</span> Last updated: August 28, 2026</div>
-        </div>
-        <div className="legal-hero-art" aria-hidden="true">
-          <div className="legal-document"><span>✓</span></div>
-        </div>
-      </section>
+      <h2>12. Data Deletion</h2>
 
-      <div className="legal-layout">
-        <aside className="legal-sidebar">
-          <nav className="legal-toc" aria-label="Terms sections">
-            <div className="legal-toc-title">ON THIS PAGE</div>
-            {sections.map(([id, label]) => <a key={id} href={`#${id}`}>{label}</a>)}
-          </nav>
-          <div className="legal-note">
-            <div className="legal-note-icon">!</div>
-            <div>
-              <strong>Use Bulkmailer responsibly</strong>
-              <p>You are responsible for your campaigns, recipients, content, and compliance with applicable laws.</p>
-            </div>
-          </div>
-        </aside>
+      <p>
+        You may request deletion of your Bulkmailer account and associated
+        personal information by contacting us using the email address provided
+        below.
+      </p>
 
-        <article className="legal-content">
-          <section id="overview" className="legal-card">
-            <div className="legal-card-icon purple">§</div>
-            <div>
-              <h2>Overview</h2>
-              <p>Bulkmailer is an email campaign workspace that allows users to connect their Google account, import recipient data, create personalized campaigns, and send messages through authorized Google services.</p>
-              <p>By accessing or using Bulkmailer, you agree to these Terms of Service. If you do not agree with these terms, you should not use the service.</p>
-            </div>
-          </section>
+      <p>
+        Revoking Bulkmailer's Google authorization prevents further use of the
+        previously granted Google permissions, but revoking authorization does
+        not necessarily delete information that was already stored in
+        Bulkmailer.
+      </p>
 
-          <section id="acceptable-use" className="legal-card">
-            <div className="legal-card-icon red">!</div>
-            <div>
-              <h2>Acceptable use</h2>
-              <p>You must use Bulkmailer responsibly and in accordance with applicable laws, regulations, and the policies of the services you connect to Bulkmailer.</p>
-              <p>You must not use Bulkmailer for:</p>
-              <ul>
-                <li>Spam or unlawful unsolicited commercial messages.</li>
-                <li>Phishing, scams, fraud, or deceptive communications.</li>
-                <li>Impersonation of another person, company, or organization.</li>
-                <li>Malware, malicious links, or harmful content.</li>
-                <li>Harassment, threats, or abusive communications.</li>
-                <li>Content that violates applicable laws or third-party rights.</li>
-                <li>Attempts to bypass Gmail, Google, or Bulkmailer limits.</li>
-              </ul>
-            </div>
-          </section>
+      <p>
+        Information may be retained where reasonably necessary for legal
+        compliance, security, fraud prevention, dispute resolution, or other
+        legitimate operational purposes.
+      </p>
 
-          <section id="account" className="legal-card">
-            <div className="legal-card-icon blue">G</div>
-            <div>
-              <h2>Google account</h2>
-              <p>Bulkmailer allows you to connect a Google account using Google's OAuth authorization process.</p>
-              <p>You authorize Bulkmailer to perform the Google actions requested through the OAuth consent screen and explicitly initiated by you.</p>
-              <p>You are responsible for maintaining the security of your Google account. You may revoke Bulkmailer's access through your Google Account settings.</p>
-            </div>
-          </section>
+      <h2>13. Service Availability</h2>
 
-          <section id="campaigns" className="legal-card">
-            <div className="legal-card-icon purple">✎</div>
-            <div>
-              <h2>Campaigns &amp; content</h2>
-              <p>You are responsible for all information and material you upload or enter into Bulkmailer.</p>
-              <ul>
-                <li>Recipient email addresses and recipient lists.</li>
-                <li>Names and personalization fields.</li>
-                <li>Email subjects and message content.</li>
-                <li>Templates and campaign data.</li>
-                <li>Attachments and imported spreadsheet information.</li>
-              </ul>
-              <p>You must have the necessary rights, permissions, and lawful basis to use recipient information and send your messages.</p>
-            </div>
-          </section>
+      <p>
+        We aim to keep Bulkmailer reliable and available, but we do not
+        guarantee uninterrupted or error-free operation.
+      </p>
 
-          <section id="sending" className="legal-card">
-            <div className="legal-card-icon orange">➤</div>
-            <div>
-              <h2>Email sending</h2>
-              <p>Bulkmailer uses your authorized Google account to send messages that you explicitly initiate.</p>
-              <p>Actual delivery may depend on Gmail availability, account restrictions, recipient servers, spam filtering, quotas, and other factors outside Bulkmailer's control.</p>
-              <p>Bulkmailer does not guarantee that every message will be delivered, opened, or accepted by a recipient.</p>
-            </div>
-          </section>
+      <p>
+        The service may become temporarily unavailable because of maintenance,
+        infrastructure problems, network failures, security incidents, Google
+        or third-party service outages, or other circumstances outside our
+        reasonable control.
+      </p>
 
-          <section id="plans" className="legal-card">
-            <div className="legal-card-icon green">◆</div>
-            <div>
-              <h2>Plans &amp; limits</h2>
-              <p>Bulkmailer may provide different account plans with different sending limits, recipient limits, attachment limits, and feature availability.</p>
-              <p>Your available limits and features are determined by the plan associated with your account and may be displayed in the Bulkmailer dashboard.</p>
-              <p>Bulkmailer may change, suspend, or discontinue a plan or feature where reasonably necessary to operate or improve the service.</p>
-            </div>
-          </section>
+      <h2>14. Suspension and Termination</h2>
 
-          <section id="data" className="legal-card">
-            <div className="legal-card-icon blue">⌁</div>
-            <div>
-              <h2>Data &amp; privacy</h2>
-              <p>Your use of Bulkmailer is also governed by our Privacy Policy, which explains how account information, Google authorization data, recipient information, campaign data, and other information are processed.</p>
-              <Link href="/privacy" className="legal-inline-link">Read the Privacy Policy →</Link>
-            </div>
-          </section>
+      <p>
+        We may suspend or terminate access to Bulkmailer if we reasonably
+        believe that an account is being used in violation of these Terms,
+        applicable law, third-party service policies, or the security or
+        integrity of the service.
+      </p>
 
-          <section id="availability" className="legal-card">
-            <div className="legal-card-icon purple">◌</div>
-            <div>
-              <h2>Service availability</h2>
-              <p>We aim to keep Bulkmailer reliable and available, but the service may occasionally be unavailable because of maintenance, infrastructure issues, third-party services, network failures, or other circumstances.</p>
-              <p>Bulkmailer does not guarantee uninterrupted or error-free operation.</p>
-            </div>
-          </section>
+      <p>
+        We may also restrict access where necessary to prevent abuse, fraud,
+        spam, unauthorized access, or other harmful activity.
+      </p>
 
-          <section id="liability" className="legal-card">
-            <div className="legal-card-icon red">◇</div>
-            <div>
-              <h2>Limitation of liability</h2>
-              <p>To the extent permitted by applicable law, Bulkmailer and its operator are not responsible for losses arising from misuse of the service, unlawful campaigns, recipient actions, Gmail or Google service interruptions, rejected messages, or circumstances outside the reasonable control of the service.</p>
-              <p>You remain responsible for ensuring that your use of Bulkmailer complies with applicable laws and third-party service policies.</p>
-            </div>
-          </section>
+      <p>
+        You may stop using Bulkmailer at any time.
+      </p>
 
-          <div className="legal-mini-grid">
-            <section id="changes" className="legal-mini-card">
-              <div className="legal-mini-icon blue">✎</div>
-              <h2>Changes to terms</h2>
-              <p>We may update these terms when the service, features, or applicable requirements change. Updated terms will be published on this page.</p>
-            </section>
-            <section className="legal-mini-card">
-              <div className="legal-mini-icon green">✓</div>
-              <h2>Your responsibility</h2>
-              <p>Use accurate recipient information and send only messages you are authorized and legally permitted to send.</p>
-            </section>
-            <section className="legal-mini-card">
-              <div className="legal-mini-icon orange">→</div>
-              <h2>Google policies</h2>
-              <p>Your use of connected Google services remains subject to Google's applicable terms and policies.</p>
-            </section>
-          </div>
+      <h2>15. Third-Party Services</h2>
 
-          <section id="contact" className="legal-contact">
-            <div className="legal-contact-icon">✉</div>
-            <div>
-              <h2>Contact us</h2>
-              <p>Questions about these Terms of Service can be sent to:</p>
-              <a href="mailto:yashsrivns@gmail.com">yashsrivns@gmail.com</a>
-            </div>
-          </section>
-        </article>
-      </div>
+      <p>
+        Bulkmailer may depend on third-party services, including Google and
+        infrastructure or hosting providers.
+      </p>
 
-      <footer className="legal-footer">
-        <div><strong>Bulkmailer</strong><span>Simple email campaigns, responsibly.</span></div>
-        <div className="legal-footer-links"><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><Link href="/">Home</Link></div>
-        <div className="legal-copyright">© 2026 Bulkmailer. All rights reserved.</div>
-      </footer>
+      <p>
+        We are not responsible for failures, interruptions, policy changes,
+        account restrictions, or other actions taken by third-party services.
+      </p>
+
+      <h2>16. Disclaimer</h2>
+
+      <p>
+        Bulkmailer is provided on an "as available" basis. To the extent
+        permitted by applicable law, we do not guarantee that the service will
+        always be available, secure, accurate, or free from errors.
+      </p>
+
+      <p>
+        You are responsible for evaluating whether Bulkmailer is appropriate
+        for your intended use and for maintaining appropriate backups of
+        information that is important to you.
+      </p>
+
+      <h2>17. Limitation of Liability</h2>
+
+      <p>
+        To the extent permitted by applicable law, Bulkmailer and its operator
+        will not be responsible for losses arising from misuse of the service,
+        unlawful campaigns, recipient actions, rejected or undelivered
+        messages, Gmail or Google service interruptions, third-party service
+        failures, account restrictions, or circumstances outside our reasonable
+        control.
+      </p>
+
+      <p>
+        You remain responsible for ensuring that your use of Bulkmailer
+        complies with applicable laws and third-party service policies.
+      </p>
+
+      <h2>18. Changes to These Terms</h2>
+
+      <p>
+        We may update these Terms when Bulkmailer changes its functionality,
+        features, policies, or when applicable legal or operational requirements
+        change.
+      </p>
+
+      <p>
+        When changes are made, the updated Terms will be published on this page
+        and the "Last updated" date will be revised accordingly.
+      </p>
+
+      <p>
+        Your continued use of Bulkmailer after updated Terms are published
+        constitutes acceptance of the revised Terms, to the extent permitted by
+        applicable law.
+      </p>
+
+      <h2>19. Contact Us</h2>
+
+      <p>
+        If you have questions about these Terms, Bulkmailer, your account, or
+        the use of connected Google services, please contact us at:
+      </p>
+
+      <p>
+        <strong>Email:</strong>{" "}
+        <a href="mailto:yashsrivns@gmail.com">
+          yashsrivns@gmail.com
+        </a>
+      </p>
+
+      <p>
+        This email address is intended for questions regarding Bulkmailer,
+        including privacy, account access, data deletion, and Terms of Service.
+      </p>
     </main>
   );
 }
