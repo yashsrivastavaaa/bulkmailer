@@ -1,0 +1,17 @@
+/* Bulkmailer UI v7 overrides */
+.template-form input,
+.template-form textarea,
+.template-form select {
+  background: #111318 !important;
+  color: #fff !important;
+  border-color: rgba(255,255,255,.12) !important;
+}
+.template-form input::placeholder,
+.template-form textarea::placeholder {
+  color: rgba(255,255,255,.38) !important;
+}
+.gmail-connect {
+  margin-left: auto !important;
+  width: fit-content !important;
+  max-width: 100%;
+}
