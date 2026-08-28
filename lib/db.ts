@@ -191,7 +191,10 @@ export async function ensureSchema() {
   await globalForDb.bulkmailerSchemaReady;
 }
 
-export async function query<T = any>(text: string, values: any[] = []) {
+export async function query<T extends import('pg').QueryResultRow = any>(
+  text: string,
+  values: any[] = []
+) {
   await ensureSchema();
   return getPool().query<T>(text, values);
 }

@@ -3,7 +3,7 @@ import { oauthClient } from '@/lib/oauth';
 import { clearOAuthState, setSession, verifyOAuthState } from '@/lib/session';
 import { upsertUser, saveGoogleAccount } from '@/lib/app-user';
 
-function emailFromIdToken(idToken?: string) {
+function emailFromIdToken(idToken?: string | null) {
   if (!idToken) return 'Google account';
   try {
     const parts = idToken.split('.');
@@ -41,6 +41,10 @@ export async function GET(req: NextRequest) {
     // Gmail's users.getProfile() requires an additional scope and is not needed.
     // The ID token's email is display-only; the refresh token is what authorizes Gmail sends.
     const email = emailFromIdToken(tokens.id_token);
+    if (email === 'Google account') {
+      await clearOAuthState();
+      return NextResponse.redirect(new URL('/?error=google_email_missing', req.url));
+    }
     await setSession(tokens.refresh_token, email);
     const user = await upsertUser(email);
     await saveGoogleAccount(user.id, email, tokens.refresh_token);
