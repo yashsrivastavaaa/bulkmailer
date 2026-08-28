@@ -20,3 +20,17 @@ export async function getUserPlan(userId:string){
  if(!rows[0])return null; if(!rows[0].key){const free=await query<any>(`SELECT slug AS key,name,price_monthly_cents AS price_cents,monthly_send_limit,max_recipients_per_campaign AS campaign_recipient_limit,max_attachment_mb AS attachment_limit_mb,max_custom_columns,features FROM plans WHERE slug='free' LIMIT 1`);if(free.rows[0]){await query(`INSERT INTO user_subscriptions(user_id,plan_id) VALUES($1,$2) ON CONFLICT(user_id) DO NOTHING`,[userId,free.rows[0].id]);return {...free.rows[0],status:'active',role:rows[0].role};}} return rows[0];
 }
 export async function getUserBySessionEmail(email:string){const {rows}=await query<any>(`SELECT id,email,role FROM users WHERE lower(email)=lower($1) LIMIT 1`,[email]);return rows[0]||null;}
+
+
+export async function getUsage(userId: string) {
+  const { rows } = await query<{ count: string }>(
+    `SELECT COUNT(*)::text AS count
+     FROM campaign_recipients cr
+     JOIN campaigns c ON c.id = cr.campaign_id
+     WHERE c.user_id = $1
+       AND cr.status = 'sent'
+       AND c.created_at >= date_trunc('month', now())`,
+    [userId]
+  );
+  return Number(rows[0]?.count ?? 0);
+}
