@@ -11,7 +11,7 @@ export default function ConnectCard({ email }: { email?: string }) {
       <div className="connect-trust"><span>✓ OAuth secured</span><span>✓ Revoke anytime</span><span>✓ No password stored</span></div>
     </div>
     <Link href="/api/auth/google" className={`connect-google-btn${loading ? ' is-loading' : ''}`} onClick={(e) => { if (loading) { e.preventDefault(); return; } setLoading(true); }} aria-disabled={loading} aria-busy={loading}>
-      <span className="google-button-icon">G</span><span>{loading ? 'Connecting…' : 'Continue with Google'}</span><span className="connect-arrow">{loading ? <span className="button-spinner light-spinner"/> : '→'}</span>
+      <span className="google-button-icon">G</span><span>{loading ? 'Continue with Google' : 'Continue with Google'}</span><span className="connect-arrow">{loading ? <span className="button-loading-skeleton light" aria-hidden="true"/> : '→'}</span>
     </Link>
   </div>
 }

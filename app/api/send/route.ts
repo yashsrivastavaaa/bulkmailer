@@ -16,9 +16,20 @@ export async function POST(req:NextRequest){
   const attachment=body.attachment?{filename:String(body.attachment.filename||'attachment'),contentType:String(body.attachment.contentType||'application/octet-stream'),data:String(body.attachment.data||'')}:undefined;
   if(attachment&&attachment.data.length>5_800_000)return NextResponse.json({error:'Attachment is too large for this deployment flow.'},{status:400});
   const id=await sendEmail({refreshToken:session.refreshToken,to,subject,html,attachment});
-  if(body.campaignId){await query(`UPDATE campaign_recipients SET status='sent',provider_message_id=$1,sent_at=now() WHERE campaign_id=$2 AND email=$3`,[id,body.campaignId,to]);await query(`UPDATE campaigns SET sent_count=sent_count+1 WHERE id=$1`,[body.campaignId]);}
+  if(body.campaignId){
+   await query(`UPDATE campaign_recipients SET status='sent',provider_message_id=$1,sent_at=now(),last_attempt_at=now() WHERE campaign_id=$2 AND email=$3`,[id,body.campaignId,to]);
+   await query(`UPDATE campaigns SET sent_count=sent_count+1 WHERE id=$1`,[body.campaignId]);
+   const cr=await query<any>(`SELECT c.user_id,c.subject,cr.name FROM campaign_recipients cr JOIN campaigns c ON c.id=cr.campaign_id WHERE c.id=$1 AND lower(cr.email)=lower($2) LIMIT 1`,[body.campaignId,to]);
+   if(cr.rows[0]) await query(`INSERT INTO contacts(user_id,email,name,total_sent,total_failed,first_contacted_at,last_contacted_at,last_subject,last_status) VALUES($1,$2,$3,1,0,now(),now(),$4,'sent') ON CONFLICT(user_id,email) DO UPDATE SET name=COALESCE(EXCLUDED.name,contacts.name),total_sent=contacts.total_sent+1,last_contacted_at=now(),last_subject=EXCLUDED.last_subject,last_status='sent',updated_at=now()`,[cr.rows[0].user_id,to,cr.rows[0].name||null,cr.rows[0].subject]);
+  }
   return NextResponse.json({ok:true,id});
  }catch(e:any){
-  if(body?.campaignId && body?.to){ try { await query(`UPDATE campaign_recipients SET status='failed',error=$1 WHERE campaign_id=$2 AND email=$3`,[String(e?.message||'Failed to send email.'),body.campaignId,String(body.to).toLowerCase()]); await query(`UPDATE campaigns SET failed_count=failed_count+1 WHERE id=$1`,[body.campaignId]); } catch {} } console.error('Send failed:',e?.response?.data||e?.message||e); return NextResponse.json({error:e?.message||'Failed to send email.'},{status:500});
+  if(body?.campaignId && body?.to){ try {
+   const failedEmail=String(body.to).trim().toLowerCase(); const msg=String(e?.message||'Failed to send email.');
+   await query(`UPDATE campaign_recipients SET status='failed',error=$1,last_attempt_at=now() WHERE campaign_id=$2 AND email=$3`,[msg,body.campaignId,failedEmail]);
+   await query(`UPDATE campaigns SET failed_count=failed_count+1 WHERE id=$1`,[body.campaignId]);
+   const cr=await query<any>(`SELECT c.user_id,c.subject,cr.name FROM campaign_recipients cr JOIN campaigns c ON c.id=cr.campaign_id WHERE c.id=$1 AND lower(cr.email)=lower($2) LIMIT 1`,[body.campaignId,failedEmail]);
+   if(cr.rows[0]) await query(`INSERT INTO contacts(user_id,email,name,total_sent,total_failed,first_contacted_at,last_contacted_at,last_subject,last_status) VALUES($1,$2,$3,0,1,now(),now(),$4,'failed') ON CONFLICT(user_id,email) DO UPDATE SET name=COALESCE(EXCLUDED.name,contacts.name),total_failed=contacts.total_failed+1,last_contacted_at=now(),last_subject=EXCLUDED.last_subject,last_status='failed',updated_at=now()`,[cr.rows[0].user_id,failedEmail,cr.rows[0].name||null,cr.rows[0].subject]);
+  } catch {} } console.error('Send failed:',e?.response?.data||e?.message||e); return NextResponse.json({error:e?.message||'Failed to send email.'},{status:500});
  }
 }

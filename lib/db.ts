@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS users (
   role TEXT NOT NULL DEFAULT 'user', created_at TIMESTAMPTZ NOT NULL DEFAULT now(), updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 CREATE TABLE IF NOT EXISTS plans (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(), slug TEXT UNIQUE NOT NULL, name TEXT NOT NULL,
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(), key TEXT UNIQUE NOT NULL, slug TEXT UNIQUE NOT NULL, name TEXT NOT NULL,
   description TEXT, price_monthly_cents INTEGER NOT NULL DEFAULT 0, currency TEXT NOT NULL DEFAULT 'USD',
   monthly_send_limit INTEGER NOT NULL DEFAULT 100, max_attachment_mb INTEGER NOT NULL DEFAULT 4,
   max_recipients_per_campaign INTEGER NOT NULL DEFAULT 100, max_custom_columns INTEGER NOT NULL DEFAULT 10,
@@ -56,6 +56,21 @@ CREATE TABLE IF NOT EXISTS campaign_recipients (
   provider_message_id TEXT, error TEXT, sent_at TIMESTAMPTZ, data JSONB NOT NULL DEFAULT '{}'::jsonb
 );
 CREATE INDEX IF NOT EXISTS campaign_recipients_campaign_idx ON campaign_recipients(campaign_id);
+CREATE TABLE IF NOT EXISTS recipient_lists (
+ id UUID PRIMARY KEY DEFAULT gen_random_uuid(), user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+ name TEXT NOT NULL, recipients JSONB NOT NULL DEFAULT '[]'::jsonb,
+ created_at TIMESTAMPTZ NOT NULL DEFAULT now(), updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+ UNIQUE(user_id,name)
+);
+CREATE TABLE IF NOT EXISTS contacts (
+ id UUID PRIMARY KEY DEFAULT gen_random_uuid(), user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+ email TEXT NOT NULL, name TEXT, total_sent INTEGER NOT NULL DEFAULT 0, total_failed INTEGER NOT NULL DEFAULT 0,
+ first_contacted_at TIMESTAMPTZ, last_contacted_at TIMESTAMPTZ, last_subject TEXT, last_status TEXT,
+ created_at TIMESTAMPTZ NOT NULL DEFAULT now(), updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+ UNIQUE(user_id,email)
+);
+CREATE INDEX IF NOT EXISTS contacts_user_updated_idx ON contacts(user_id,updated_at DESC);
+CREATE INDEX IF NOT EXISTS contacts_user_email_idx ON contacts(user_id,email);
 CREATE TABLE IF NOT EXISTS feature_definitions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(), key TEXT UNIQUE NOT NULL, label TEXT NOT NULL,
   description TEXT, value_type TEXT NOT NULL DEFAULT 'boolean', enabled BOOLEAN NOT NULL DEFAULT true,
@@ -149,6 +164,32 @@ async function migrate(client: PoolClient) {
   await client.query(`UPDATE feature_definitions SET label=COALESCE(NULLIF(btrim(label),''),key), description=COALESCE(description,''), value_type=COALESCE(NULLIF(value_type,''),'boolean')`);
   await client.query(`ALTER TABLE feature_definitions ALTER COLUMN label SET NOT NULL`);
   await client.query(`CREATE UNIQUE INDEX IF NOT EXISTS feature_definitions_key_unique ON feature_definitions(key)`);
+
+  // Campaign content, health and scheduling. Existing deployments get these fields without destructive changes.
+  await client.query(`ALTER TABLE campaigns ADD COLUMN IF NOT EXISTS body TEXT`);
+  await client.query(`ALTER TABLE campaigns ADD COLUMN IF NOT EXISTS scheduled_at TIMESTAMPTZ`);
+  await client.query(`ALTER TABLE campaigns ADD COLUMN IF NOT EXISTS health_score INTEGER NOT NULL DEFAULT 100`);
+  await client.query(`ALTER TABLE campaigns ADD COLUMN IF NOT EXISTS health_issues JSONB NOT NULL DEFAULT '[]'::jsonb`);
+  await client.query(`ALTER TABLE campaign_recipients ADD COLUMN IF NOT EXISTS last_attempt_at TIMESTAMPTZ`);
+
+  // Contacts are durable people records; campaign_recipients remains the source of message history.
+  await client.query(`CREATE TABLE IF NOT EXISTS contacts (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(), user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    email TEXT NOT NULL, name TEXT, total_sent INTEGER NOT NULL DEFAULT 0, total_failed INTEGER NOT NULL DEFAULT 0,
+    first_contacted_at TIMESTAMPTZ, last_contacted_at TIMESTAMPTZ, last_subject TEXT, last_status TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(), updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    UNIQUE(user_id,email)
+  )`);
+  await client.query(`CREATE INDEX IF NOT EXISTS contacts_user_updated_idx ON contacts(user_id,updated_at DESC)`);
+  await client.query(`CREATE INDEX IF NOT EXISTS contacts_user_email_idx ON contacts(user_id,email)`);
+  await client.query(`INSERT INTO contacts(user_id,email,name,total_sent,total_failed,first_contacted_at,last_contacted_at,last_subject,last_status,created_at,updated_at)
+    SELECT c.user_id, lower(trim(cr.email)), max(cr.name) FILTER (WHERE cr.name IS NOT NULL AND trim(cr.name)<>''),
+      COUNT(*) FILTER (WHERE cr.status='sent'), COUNT(*) FILTER (WHERE cr.status='failed'),
+      min(cr.sent_at), max(cr.sent_at), (array_agg(c.subject ORDER BY cr.sent_at DESC NULLS LAST))[1],
+      (array_agg(cr.status ORDER BY cr.sent_at DESC NULLS LAST))[1], min(c.created_at), max(COALESCE(cr.sent_at,c.created_at))
+    FROM campaigns c JOIN campaign_recipients cr ON cr.campaign_id=c.id
+    WHERE trim(cr.email)<>'' GROUP BY c.user_id, lower(trim(cr.email))
+    ON CONFLICT(user_id,email) DO UPDATE SET name=COALESCE(EXCLUDED.name,contacts.name), total_sent=EXCLUDED.total_sent, total_failed=EXCLUDED.total_failed, first_contacted_at=EXCLUDED.first_contacted_at, last_contacted_at=EXCLUDED.last_contacted_at, last_subject=EXCLUDED.last_subject, last_status=EXCLUDED.last_status, updated_at=EXCLUDED.updated_at`);
 
   // Dynamic row data for spreadsheet columns.
   await client.query(`ALTER TABLE campaign_recipients ADD COLUMN IF NOT EXISTS data JSONB NOT NULL DEFAULT '{}'::jsonb`);
