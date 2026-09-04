@@ -59,6 +59,23 @@ try {
 
   await client.query(`INSERT INTO feature_definitions(key,label,description,value_type,enabled) VALUES ('excel_import','Excel / CSV import','Import structured recipient lists and spreadsheet fields.','boolean',true),('paste_recipients','Paste recipients','Paste multiple email addresses directly.','boolean',true),('personalization','Dynamic personalization','Use spreadsheet columns as merge fields.','boolean',true),('attachments','Attachments','Attach files to campaign messages.','boolean',true),('templates','Saved templates','Save and reuse message templates.','boolean',true),('scheduled_campaigns','Scheduled campaigns','Schedule campaigns for later delivery.','boolean',true),('analytics','Campaign analytics','View delivery and campaign performance.','boolean',true),('segments','Recipient segments','Save and reuse recipient segments.','boolean',true),('team_workspaces','Team workspaces','Collaborate with teammates in shared workspaces.','boolean',true),('api_access','API access','Connect Bulkmailer to external workflows.','boolean',true) ON CONFLICT(key) DO UPDATE SET label=excluded.label,description=excluded.description,value_type=excluded.value_type,updated_at=now()`);
   await client.query(`INSERT INTO plans(key,slug,name,description,price_monthly_cents,currency,monthly_send_limit,max_attachment_mb,max_recipients_per_campaign,max_custom_columns,features,is_active,sort_order) VALUES ('free','free','Free','Essential email sending for individuals.',0,'USD',100,4,100,10,'{"excel":true,"paste_emails":true,"personalization":true,"attachments":true,"templates":false,"scheduled":false,"analytics":false}',true,1),('starter','starter','Starter','For growing outreach and recurring campaigns.',900,'USD',1000,10,1000,30,'{"excel":true,"paste_emails":true,"personalization":true,"attachments":true,"templates":true,"scheduled":false,"analytics":true}',true,2),('pro','pro','Pro','Advanced automation and analytics.',1900,'USD',5000,20,5000,100,'{"excel":true,"paste_emails":true,"personalization":true,"attachments":true,"templates":true,"scheduled":true,"analytics":true,"segments":true,"priority_support":true}',true,3),('business','business','Business','High-volume sending and team workflows.',4900,'USD',25000,25,25000,500,'{"excel":true,"paste_emails":true,"personalization":true,"attachments":true,"templates":true,"scheduled":true,"analytics":true,"segments":true,"priority_support":true,"team_workspaces":true,"api_access":true}',true,4) ON CONFLICT(slug) DO UPDATE SET key=excluded.key, name=excluded.name,description=excluded.description,price_monthly_cents=excluded.price_monthly_cents,currency=excluded.currency,monthly_send_limit=excluded.monthly_send_limit,max_attachment_mb=excluded.max_attachment_mb,max_recipients_per_campaign=excluded.max_recipients_per_campaign,max_custom_columns=excluded.max_custom_columns,features=excluded.features,is_active=excluded.is_active,sort_order=excluded.sort_order,updated_at=now()`);
+
+  // Repair legacy/incomplete subscription rows after the canonical plans have been seeded.
+  await client.query(`
+    INSERT INTO user_subscriptions(user_id,plan_id,status,current_period_start,current_period_end)
+    SELECT u.id,p.id,'active',date_trunc('month',now()),date_trunc('month',now()) + interval '1 month'
+    FROM users u
+    CROSS JOIN plans p
+    WHERE p.slug='free'
+      AND NOT EXISTS (SELECT 1 FROM user_subscriptions s WHERE s.user_id=u.id AND s.plan_id IS NOT NULL)
+    ON CONFLICT(user_id) DO UPDATE SET
+      plan_id=EXCLUDED.plan_id,
+      status='active',
+      current_period_start=COALESCE(user_subscriptions.current_period_start, EXCLUDED.current_period_start),
+      current_period_end=COALESCE(user_subscriptions.current_period_end, EXCLUDED.current_period_end),
+      updated_at=now()
+  `);
+
   const admins=(process.env.ADMIN_EMAILS||'yashsrivns@gmail.com').split(',').map(v=>v.trim().toLowerCase()).filter(Boolean);
   for(const email of admins) await client.query(`UPDATE users SET role='admin',updated_at=now() WHERE lower(email)=lower($1)`,[email]);
   await client.query('COMMIT');

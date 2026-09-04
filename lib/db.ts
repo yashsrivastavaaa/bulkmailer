@@ -215,6 +215,23 @@ async function migrate(client: PoolClient) {
     ('business','business','Business','High-volume sending and team workflows.',4900,'USD',25000,25,25000,500,'{"excel":true,"paste_emails":true,"personalization":true,"attachments":true,"templates":true,"scheduled":true,"analytics":true,"segments":true,"priority_support":true,"team_workspaces":true,"api_access":true}',true,4)
     ON CONFLICT(slug) DO UPDATE SET key=excluded.key,name=excluded.name,description=excluded.description,price_monthly_cents=excluded.price_monthly_cents,currency=excluded.currency,monthly_send_limit=excluded.monthly_send_limit,max_attachment_mb=excluded.max_attachment_mb,max_recipients_per_campaign=excluded.max_recipients_per_campaign,max_custom_columns=excluded.max_custom_columns,features=excluded.features,is_active=excluded.is_active,sort_order=excluded.sort_order,updated_at=now()`);
 
+  // Repair legacy/incomplete subscription rows now that the canonical plans exist.
+  // This is intentionally after plan seeding so the free plan id is available.
+  await client.query(`
+    INSERT INTO user_subscriptions(user_id,plan_id,status,current_period_start,current_period_end)
+    SELECT u.id,p.id,'active',date_trunc('month',now()),date_trunc('month',now()) + interval '1 month'
+    FROM users u
+    CROSS JOIN plans p
+    WHERE p.slug='free'
+      AND NOT EXISTS (SELECT 1 FROM user_subscriptions s WHERE s.user_id=u.id AND s.plan_id IS NOT NULL)
+    ON CONFLICT(user_id) DO UPDATE SET
+      plan_id=EXCLUDED.plan_id,
+      status='active',
+      current_period_start=COALESCE(user_subscriptions.current_period_start, EXCLUDED.current_period_start),
+      current_period_end=COALESCE(user_subscriptions.current_period_end, EXCLUDED.current_period_end),
+      updated_at=now()
+  `);
+
   // Ensure the configured administrator is an admin without granting admin to anyone else.
   const adminEmails = (process.env.ADMIN_EMAILS || 'yashsrivns@gmail.com').split(',').map(v => v.trim().toLowerCase()).filter(Boolean);
   for (const email of adminEmails) await client.query(`UPDATE users SET role='admin',updated_at=now() WHERE lower(email)=lower($1)`, [email]);

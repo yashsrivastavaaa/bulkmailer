@@ -50,7 +50,7 @@ export async function GET(req: NextRequest) {
     await saveGoogleAccount(user.id, email, tokens.refresh_token);
     await clearOAuthState();
 
-    return NextResponse.redirect(new URL('/?connected=1', req.url));
+    return NextResponse.redirect(new URL('/dashboard?connected=1', req.url));
   } catch (e: any) {
     console.error('OAuth callback failed:', e?.response?.data || e?.message || e);
     await clearOAuthState();
