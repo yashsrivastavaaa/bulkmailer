@@ -53,7 +53,11 @@ CREATE TABLE IF NOT EXISTS campaigns (
 CREATE TABLE IF NOT EXISTS campaign_recipients (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(), campaign_id UUID NOT NULL REFERENCES campaigns(id) ON DELETE CASCADE,
   email TEXT NOT NULL, name TEXT, selected BOOLEAN NOT NULL DEFAULT true, status TEXT NOT NULL DEFAULT 'pending',
+<<<<<<< HEAD
   provider_message_id TEXT, error TEXT, sent_at TIMESTAMPTZ, opened_at TIMESTAMPTZ, open_count INTEGER NOT NULL DEFAULT 0, data JSONB NOT NULL DEFAULT '{}'::jsonb
+=======
+  provider_message_id TEXT, error TEXT, sent_at TIMESTAMPTZ, data JSONB NOT NULL DEFAULT '{}'::jsonb
+>>>>>>> 1746cfb0b4be2466d6a641c914bc163004032b42
 );
 CREATE INDEX IF NOT EXISTS campaign_recipients_campaign_idx ON campaign_recipients(campaign_id);
 CREATE TABLE IF NOT EXISTS recipient_lists (
@@ -171,9 +175,12 @@ async function migrate(client: PoolClient) {
   await client.query(`ALTER TABLE campaigns ADD COLUMN IF NOT EXISTS health_score INTEGER NOT NULL DEFAULT 100`);
   await client.query(`ALTER TABLE campaigns ADD COLUMN IF NOT EXISTS health_issues JSONB NOT NULL DEFAULT '[]'::jsonb`);
   await client.query(`ALTER TABLE campaign_recipients ADD COLUMN IF NOT EXISTS last_attempt_at TIMESTAMPTZ`);
+<<<<<<< HEAD
   await client.query(`ALTER TABLE campaigns ADD COLUMN IF NOT EXISTS track_opens BOOLEAN NOT NULL DEFAULT false`);
   await client.query(`ALTER TABLE campaign_recipients ADD COLUMN IF NOT EXISTS opened_at TIMESTAMPTZ`);
   await client.query(`ALTER TABLE campaign_recipients ADD COLUMN IF NOT EXISTS open_count INTEGER NOT NULL DEFAULT 0`);
+=======
+>>>>>>> 1746cfb0b4be2466d6a641c914bc163004032b42
 
   // Contacts are durable people records; campaign_recipients remains the source of message history.
   await client.query(`CREATE TABLE IF NOT EXISTS contacts (

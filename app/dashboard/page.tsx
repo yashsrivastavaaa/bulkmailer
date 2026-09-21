@@ -1,10 +1,18 @@
 'use client';
+<<<<<<< HEAD
 import { useEffect, useMemo, useRef, useState } from 'react';
+=======
+import { useEffect, useMemo, useState } from 'react';
+>>>>>>> 1746cfb0b4be2466d6a641c914bc163004032b42
 import ConnectCard from '@/components/ConnectCard';
 import { getAuthStatus } from '@/lib/client-auth';
 import SelectMenu from '@/components/SelectMenu';
 
+<<<<<<< HEAD
 type Recipient={email:string;name?:string;row?:number;source:'excel'|'paste';data?:Record<string,string>;verified?:boolean;verifyReason?:string;verifyWarning?:boolean};
+=======
+type Recipient={email:string;name?:string;row?:number;source:'excel'|'paste';data?:Record<string,string>;verified?:boolean;verifyReason?:string};
+>>>>>>> 1746cfb0b4be2466d6a641c914bc163004032b42
 type Attachment={filename:string;contentType:string;data:string;size:number};
 const emailRe=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 function normalizeEmail(v:unknown){return String(v??'').trim().toLowerCase()}
@@ -17,16 +25,26 @@ export default function Dashboard(){
  const [fileName,setFileName]=useState(''),[paste,setPaste]=useState(''),[search,setSearch]=useState(''),[recipientFilter,setRecipientFilter]=useState('all'),[recipientLimit,setRecipientLimit]=useState(50);
  const [mapping,setMapping]=useState<{headers:string[];rows:any[][]}|null>(null),[mappingOpen,setMappingOpen]=useState(false),[emailField,setEmailField]=useState(''),[nameField,setNameField]=useState('');
  const [templates,setTemplates]=useState<any[]>([]),[templateId,setTemplateId]=useState('');
+<<<<<<< HEAD
  const [subject,setSubject]=useState(''),[body,setBody]=useState(''),[trackOpens,setTrackOpens]=useState(false);
  const [attachment,setAttachment]=useState<Attachment|null>(null),[logs,setLogs]=useState<string[]>([]);
  const [sending,setSending]=useState(false),[done,setDone]=useState(0),[error,setError]=useState('');
  const [verifyState,setVerifyState]=useState<'idle'|'checking'|'done'>('idle'),[verifySummary,setVerifySummary]=useState('');
  const messageRef=useRef<HTMLTextAreaElement>(null);
+=======
+ const [subject,setSubject]=useState(''),[body,setBody]=useState(''),[scheduleAt,setScheduleAt]=useState('');
+ const [attachment,setAttachment]=useState<Attachment|null>(null),[logs,setLogs]=useState<string[]>([]);
+ const [sending,setSending]=useState(false),[done,setDone]=useState(0),[error,setError]=useState('');
+ const [verifyState,setVerifyState]=useState<'idle'|'checking'|'done'>('idle'),[verifySummary,setVerifySummary]=useState('');
+>>>>>>> 1746cfb0b4be2466d6a641c914bc163004032b42
 
  const valid=useMemo(()=>recipients.filter(r=>emailRe.test(r.email)),[recipients]);
  const filtered=useMemo(()=>valid.filter(r=>{const q=search.trim().toLowerCase();const matchesSearch=!q||r.email.includes(q)||(r.name||'').toLowerCase().includes(q);const matchesStatus=recipientFilter==='all'||(recipientFilter==='verified'&&r.verified===true)||(recipientFilter==='attention'&&r.verified===false)||(recipientFilter==='unchecked'&&r.verified!==true&&r.verified!==false);return matchesSearch&&matchesStatus}),[valid,search,recipientFilter]);
  const selectedRecipients=useMemo(()=>valid.filter(r=>selected.has(r.email)),[valid,selected]);
+<<<<<<< HEAD
  const recipientWarnings=useMemo(()=>selectedRecipients.filter(r=>r.verifyWarning).map(r=>`${r.email}: ${r.verifyReason||'Mailbox could not be confirmed'}`),[selectedRecipients]);
+=======
+>>>>>>> 1746cfb0b4be2466d6a641c914bc163004032b42
  const previewRecipient=selectedRecipients[0];
 
  async function refreshStatus(force=false){try{const d=await getAuthStatus(force);setConnected(!!d.connected);setAccount(d.email||'');setPlan(d.plan||null);if(d.connected){fetch('/api/templates',{cache:'no-store'}).then(r=>r.ok?r.json():null).then(v=>setTemplates(v?.templates||[])).catch(()=>{})}}catch{setConnected(false)}finally{setAuthLoading(false)}}
@@ -39,10 +57,16 @@ export default function Dashboard(){
  function clearAll(){setRecipients([]);setSelected(new Set());setFileName('');setPaste('');setMapping(null);setVerifyState('idle');setVerifySummary('');setLogs([]);setDone(0)}
  function personalize(text:string,r?:Recipient){return text.replace(/\{\{([^}]+)\}\}/g,(_,raw)=>{const key=String(raw).trim();if(key.toLowerCase()==='name')return escapeHtml(r?.name||r?.email?.split('@')[0]||'Alex');if(key.toLowerCase()==='email')return escapeHtml(r?.email||account||'alex@example.com');const match=Object.keys(r?.data||{}).find(k=>k.toLowerCase()===key.toLowerCase());return match?escapeHtml(r!.data![match]):`{{${key}}}`})}
  function useTemplate(id:string){setTemplateId(id);const t=templates.find(x=>x.id===id);if(t){setSubject(t.subject||'');setBody(t.body||'')}}
+<<<<<<< HEAD
  function insertField(token:string){const input=messageRef.current;const start=input?.selectionStart??body.length;const end=input?.selectionEnd??body.length;setBody(body.slice(0,start)+token+body.slice(end));requestAnimationFrame(()=>{input?.focus();input?.setSelectionRange(start+token.length,start+token.length)})}
  async function verifyRecipients(){if(!selectedRecipients.length){setError('Select recipients first.');return false}setVerifyState('checking');setError('');try{const r=await fetch('/api/verify-emails',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({emails:selectedRecipients.map(x=>x.email)})});const d:any=await r.json();if(!r.ok)throw new Error(d.error||'Could not verify recipients.');const map=new Map<string,{valid:boolean;warning?:boolean;reason?:string}>((d.results||[]).map((x:any)=>[x.email,x]));const bad=selectedRecipients.filter(x=>!map.get(x.email)?.valid);const warnings=selectedRecipients.filter(x=>map.get(x.email)?.warning);setRecipients(prev=>prev.map(x=>map.has(x.email)?{...x,verified:!!map.get(x.email)?.valid,verifyReason:map.get(x.email)?.reason,verifyWarning:!!map.get(x.email)?.warning}:x));setVerifyState('done');setVerifySummary(bad.length?`${bad.length} recipient${bad.length===1?'':'s'} need attention.`:warnings.length?`${warnings.length} recipient${warnings.length===1?'':'s'} have a mailbox warning.`:`All ${selectedRecipients.length} selected recipients are ready.`);if(bad.length){setError(bad.slice(0,5).map(x=>`${x.email}: ${map.get(x.email)?.reason||'Could not verify'}`).join(' · '));return false}return true}catch(e:any){setVerifyState('idle');setError(e.message||'Could not verify recipients.');return false}}
  async function loadAttachment(e:React.ChangeEvent<HTMLInputElement>){const f=e.target.files?.[0];if(!f)return;if(f.size>4*1024*1024){setError('Attachment limit is 4 MB.');return}const b=await f.arrayBuffer();let binary='';const bytes=new Uint8Array(b);for(let i=0;i<bytes.length;i+=0x8000)binary+=String.fromCharCode(...bytes.subarray(i,i+0x8000));setAttachment({filename:f.name,contentType:f.type||'application/octet-stream',data:btoa(binary),size:f.size})}
  async function send(){setError('');if(!connected)return setError('Connect Gmail first.');if(!selectedRecipients.length)return setError('Select at least one recipient.');if(!subject.trim()||!body.trim())return setError('Subject and email body are required.');if((verifyState!=='done'||selectedRecipients.some(r=>r.verified!==true))&&!await verifyRecipients())return;if(!confirm(`You are about to send ${selectedRecipients.length} emails. Continue?`))return;setSending(true);setDone(0);setLogs([]);let campaignId='';let success=0;try{const cr=await fetch('/api/campaigns',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({subject,body,sourceName:fileName,attachmentName:attachment?.filename,trackOpens,recipients:selectedRecipients})});const cd=await cr.json();if(!cr.ok)throw new Error(cd.error||'Could not create campaign');campaignId=cd.campaignId;if(cd.health?.issues?.length)setLogs(cd.health.issues.map((issue:string)=>`Warning: ${issue}`));for(let i=0;i<selectedRecipients.length;i++){const r=selectedRecipients[i];setLogs(v=>[...v,`Sending ${i+1}/${selectedRecipients.length} → ${r.email}`]);try{const res=await fetch('/api/send',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to:r.email,subject:personalize(subject,r),html:personalize(body,r).replace(/\n/g,'<br>'),attachment,campaignId,trackOpen:trackOpens})});const d=await res.json();if(!res.ok)throw new Error(d.error||'Failed');success++;setDone(i+1);setLogs(v=>[...v,`✓ Sent ${i+1}/${selectedRecipients.length} → ${r.email}`])}catch(err:any){setLogs(v=>[...v,`✗ Failed → ${r.email}: ${err.message||'Unknown error'}`])}}if(campaignId)await fetch(`/api/campaigns/${campaignId}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({status:success===selectedRecipients.length?'completed':'completed_with_errors',failed:selectedRecipients.length-success})});await refreshStatus();setLogs(v=>[...v,`Finished — ${success} sent, ${selectedRecipients.length-success} failed.`])}catch(e:any){setError(e.message||'Could not send campaign.')}finally{setSending(false)}}
+=======
+ async function verifyRecipients(){if(!selectedRecipients.length){setError('Select recipients first.');return false}setVerifyState('checking');setError('');try{const r=await fetch('/api/verify-emails',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({emails:selectedRecipients.map(x=>x.email)})});const d:any=await r.json();if(!r.ok)throw new Error(d.error||'Could not verify recipients.');const map=new Map<string,{valid:boolean;reason?:string}>((d.results||[]).map((x:any)=>[x.email,x]));const bad=selectedRecipients.filter(x=>!map.get(x.email)?.valid);setRecipients(prev=>prev.map(x=>map.has(x.email)?{...x,verified:!!map.get(x.email)?.valid,verifyReason:map.get(x.email)?.reason}:x));setVerifyState('done');setVerifySummary(bad.length?`${bad.length} recipient${bad.length===1?'':'s'} need attention.`:`All ${selectedRecipients.length} selected recipients are ready.`);if(bad.length){setError(bad.slice(0,5).map(x=>`${x.email}: ${map.get(x.email)?.reason||'Could not verify'}`).join(' · '));return false}return true}catch(e:any){setVerifyState('idle');setError(e.message||'Could not verify recipients.');return false}}
+ async function loadAttachment(e:React.ChangeEvent<HTMLInputElement>){const f=e.target.files?.[0];if(!f)return;if(f.size>4*1024*1024){setError('Attachment limit is 4 MB.');return}const b=await f.arrayBuffer();let binary='';const bytes=new Uint8Array(b);for(let i=0;i<bytes.length;i+=0x8000)binary+=String.fromCharCode(...bytes.subarray(i,i+0x8000));setAttachment({filename:f.name,contentType:f.type||'application/octet-stream',data:btoa(binary),size:f.size})}
+ async function send(){setError('');if(!connected)return setError('Connect Gmail first.');if(!selectedRecipients.length)return setError('Select at least one recipient.');if(!subject.trim()||!body.trim())return setError('Subject and email body are required.');if(verifyState!=='done'){const ok=await verifyRecipients();if(!ok)return}if(!selectedRecipients.every(r=>r.verified===true))return setError('Please verify all selected recipients before sending.');if(!confirm(`You are about to send ${selectedRecipients.length} emails. Continue?`))return;setSending(true);setDone(0);setLogs([]);let campaignId='';let success=0;try{const cr=await fetch('/api/campaigns',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({subject,body,sourceName:fileName,attachmentName:attachment?.filename,scheduledAt:scheduleAt||null,recipients:selectedRecipients})});const cd=await cr.json();if(!cr.ok)throw new Error(cd.error||'Could not create campaign');campaignId=cd.campaignId;if(scheduleAt){setLogs([`✓ Campaign scheduled for ${new Date(scheduleAt).toLocaleString()}`]);setSending(false);return}for(let i=0;i<selectedRecipients.length;i++){const r=selectedRecipients[i];setLogs(v=>[...v,`Sending ${i+1}/${selectedRecipients.length} → ${r.email}`]);try{const res=await fetch('/api/send',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to:r.email,subject:personalize(subject,r),html:personalize(body,r).replace(/\n/g,'<br>'),attachment,campaignId})});const d=await res.json();if(!res.ok)throw new Error(d.error||'Failed');success++;setDone(i+1);setLogs(v=>[...v,`✓ Sent ${i+1}/${selectedRecipients.length} → ${r.email}`])}catch(err:any){setLogs(v=>[...v,`✗ Failed → ${r.email}: ${err.message||'Unknown error'}`])}}if(campaignId)await fetch(`/api/campaigns/${campaignId}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({status:success===selectedRecipients.length?'completed':'completed_with_errors',failed:selectedRecipients.length-success})});await refreshStatus();setLogs(v=>[...v,`Finished — ${success} sent, ${selectedRecipients.length-success} failed.`])}catch(e:any){setError(e.message||'Could not send campaign.')}finally{setSending(false)}}
+>>>>>>> 1746cfb0b4be2466d6a641c914bc163004032b42
  async function saveDraft(){setError('');if(!selectedRecipients.length)return setError('Select at least one recipient.');try{const r=await fetch('/api/campaigns',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mode:'draft',subject,body,sourceName:fileName,attachmentName:attachment?.filename,recipients:selectedRecipients})});const d=await r.json();if(!r.ok)throw new Error(d.error||'Could not save draft');setLogs(v=>[...v,`✓ Draft saved · ${d.campaignId}`])}catch(e:any){setError(e.message||'Could not save draft')}}
  async function saveList(){const name=window.prompt('Name this recipient list');if(!name)return;try{const r=await fetch('/api/recipient-lists',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,recipients:selectedRecipients})});const d=await r.json();if(!r.ok)throw new Error(d.error||'Could not save list');setLogs(v=>[...v,`✓ Saved recipient list “${name}”`])}catch(e:any){setError(e.message||'Could not save list')}}
 
@@ -60,7 +84,10 @@ export default function Dashboard(){
   </div>
 
   {error&&<div className="dash-alert-v4">{error}</div>}
+<<<<<<< HEAD
   {!!recipientWarnings.length&&<div className="dash-alert-v4 dash-warning-v4">Warning: {recipientWarnings.slice(0,3).join(' · ')}{recipientWarnings.length>3?` · and ${recipientWarnings.length-3} more`:''}</div>}
+=======
+>>>>>>> 1746cfb0b4be2466d6a641c914bc163004032b42
   {!connected&&<ConnectCard/>}
 
   <section className="dash-kpis-v4">
@@ -85,12 +112,20 @@ export default function Dashboard(){
       <p className="dash-section-copy-v4">Write once and let your spreadsheet fields make every email feel personal.</p>
       <div className="dash-compose-top-v4"><label>Saved template<SelectMenu value={templateId} onChange={useTemplate} options={[{value:'',label:'Start from scratch'},...templates.map(t=>({value:t.id,label:t.name}))]} aria-label="Saved template" /></label>{mapping&&<button className="dash-quiet-btn-v4" type="button" onClick={()=>setMappingOpen(true)}>Edit mapping</button>}</div>
       <label className="dash-field-v4">Subject<input value={subject} onChange={e=>setSubject(e.target.value)} placeholder="Your subject line"/></label>
+<<<<<<< HEAD
       <div className="dash-token-row-v4"><span>Insert field</span><button type="button" onClick={()=>insertField(' {{name}}')}>Name</button><button type="button" onClick={()=>insertField(' {{email}}')}>Email</button>{mapping?.headers.slice(0,4).filter(h=>h!==emailField&&h!==nameField).map(h=><button type="button" key={h} onClick={()=>insertField(` {{${h}}}`)}>{h}</button>)}</div>
       <label className="dash-field-v4">Message<textarea ref={messageRef} value={body} onChange={e=>setBody(e.target.value)} placeholder="Write a clear, human email..."/></label>
       <label className="dash-attachment-v4"><input className="visually-hidden" type="file" onChange={loadAttachment}/><span className="attachment-icon">+</span><span><strong>{attachment?.filename||'Attach a file'}</strong><small>{attachment?`${(attachment.size/1024/1024).toFixed(2)} MB · ready`:'Up to 4 MB'}</small></span></label>
       {attachment&&<button className="dash-remove-v4" onClick={()=>setAttachment(null)}>Remove attachment</button>}
       <label className="dash-tracking-v4"><input type="checkbox" checked={trackOpens} onChange={e=>setTrackOpens(e.target.checked)}/><span><strong>Track email opens</strong><small>Adds a tracking pixel. Opens are estimates and can be blocked by recipients or email clients.</small></span></label>
       <button className="dash-secondary-v4" onClick={saveDraft} disabled={sending}>Save draft</button>
+=======
+      <div className="dash-token-row-v4"><span>Insert field</span><button onClick={()=>setBody(v=>v+' {{name}}')}>Name</button><button onClick={()=>setBody(v=>v+' {{email}}')}>Email</button>{mapping?.headers.slice(0,4).filter(h=>h!==emailField&&h!==nameField).map(h=><button key={h} onClick={()=>setBody(v=>v+` {{${h}}}`)}>{h}</button>)}</div>
+      <label className="dash-field-v4">Message<textarea value={body} onChange={e=>setBody(e.target.value)} placeholder="Write a clear, human email..."/></label>
+      <label className="dash-attachment-v4"><input className="visually-hidden" type="file" onChange={loadAttachment}/><span className="attachment-icon">+</span><span><strong>{attachment?.filename||'Attach a file'}</strong><small>{attachment?`${(attachment.size/1024/1024).toFixed(2)} MB · ready`:'Up to 4 MB'}</small></span></label>
+      {attachment&&<button className="dash-remove-v4" onClick={()=>setAttachment(null)}>Remove attachment</button>}
+      <div className="dash-schedule-v4"><label className="dash-field-v4">Schedule (optional)<input type="datetime-local" value={scheduleAt} onChange={e=>setScheduleAt(e.target.value)}/></label><button className="dash-secondary-v4" onClick={saveDraft} disabled={sending}>Save draft</button></div>
+>>>>>>> 1746cfb0b4be2466d6a641c914bc163004032b42
     </div>
 
     <aside className="dash-preview-v4">
@@ -104,7 +139,11 @@ export default function Dashboard(){
   <section className="dash-review-v4">
     <div className="dash-review-title-v4"><div><span className="dash-number-v4 orange">03</span><div><div className="dash-kicker-v4">REVIEW & SEND</div><h2>Final checks before launch</h2></div></div><span className={`dash-ready-pill-v4 ${verifyState==='done'?'ready':''}`}>{verifyState==='done'?'READY TO SEND':'PRE-FLIGHT'}</span></div>
     <div className="dash-checks-v4"><div className={selectedRecipients.length?'ok':''}><span>✓</span><div><strong>Audience</strong><small>{selectedRecipients.length?`${selectedRecipients.length} recipients selected`:'Select recipients'}</small></div></div><div className={verifyState==='done'?'ok':''}><span>✓</span><div><strong>Verification</strong><small>{verifySummary||'Verify recipients before sending'}</small></div></div><div className={subject.trim()&&body.trim()?'ok':''}><span>✓</span><div><strong>Message</strong><small>{subject.trim()&&body.trim()?'Subject and body are ready':'Add subject and message'}</small></div></div><div className={connected?'ok':''}><span>✓</span><div><strong>Gmail</strong><small>{connected?'Connected and ready':'Connect Gmail'}</small></div></div></div>
+<<<<<<< HEAD
     <div className="dash-review-actions-v4"><button className="dash-secondary-v4" onClick={verifyRecipients} disabled={sending||verifyState==='checking'}>{verifyState==='checking'?'Checking…':'Verify recipients'}</button><button className="dash-send-v4" onClick={send} disabled={sending||!selectedRecipients.length}>{sending?`Sending ${done}/${selectedRecipients.length}`:'Review & send →'}</button></div>
+=======
+    <div className="dash-review-actions-v4"><button className="dash-secondary-v4" onClick={verifyRecipients} disabled={sending||verifyState==='checking'}>{verifyState==='checking'?'Checking…':'Verify recipients'}</button><button className="dash-send-v4" onClick={send} disabled={sending||!selectedRecipients.length}>{sending?`Sending ${done}/${selectedRecipients.length}`:scheduleAt?'Schedule campaign →':'Review & send →'}</button></div>
+>>>>>>> 1746cfb0b4be2466d6a641c914bc163004032b42
   </section>
 
   <section className="dash-activity-v4"><div className="dash-activity-title-v4"><div><span className="dash-number-v4 green">04</span><div><div className="dash-kicker-v4">ACTIVITY</div><h2>Recipient activity</h2></div></div><span className={sending?'live':'ready'}>{sending?'● LIVE':'READY'}</span></div><div className="dash-log-v4">{logs.length?logs.map((l,i)=><div key={i}><span className="log-dot"/>{l}</div>):<span>No activity yet. Verify your audience or send a campaign to see events here.</span>}</div></section>

@@ -9,9 +9,15 @@ export async function GET(_req:NextRequest,{params}:{params:Promise<{id:string}>
  if(!s)return NextResponse.json({error:'Unauthorized'},{status:401});
  const u=await upsertUser(s.email);
  const {id}=await params;
+<<<<<<< HEAD
  const {rows}=await query(`SELECT id,subject,source_name,attachment_name,total_recipients,sent_count,failed_count,status,created_at,completed_at,body,track_opens,health_score,health_issues FROM campaigns WHERE id=$1 AND user_id=$2 LIMIT 1`,[id,u.id]);
  if(!rows[0])return NextResponse.json({error:'Campaign not found'},{status:404});
  const recipients=await query(`SELECT id,email,name,selected,status,provider_message_id,error,sent_at,opened_at,open_count,data FROM campaign_recipients WHERE campaign_id=$1 ORDER BY id`,[id]);
+=======
+ const {rows}=await query(`SELECT id,subject,source_name,attachment_name,total_recipients,sent_count,failed_count,status,created_at,completed_at,scheduled_at,body,health_score,health_issues FROM campaigns WHERE id=$1 AND user_id=$2 LIMIT 1`,[id,u.id]);
+ if(!rows[0])return NextResponse.json({error:'Campaign not found'},{status:404});
+ const recipients=await query(`SELECT id,email,name,selected,status,provider_message_id,error,sent_at,data FROM campaign_recipients WHERE campaign_id=$1 ORDER BY id`,[id]);
+>>>>>>> 1746cfb0b4be2466d6a641c914bc163004032b42
  return NextResponse.json({campaign:rows[0],recipients:recipients.rows});
 }
 

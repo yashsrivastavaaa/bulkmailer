@@ -38,10 +38,14 @@ try {
     `ALTER TABLE plans ADD COLUMN IF NOT EXISTS sort_order INTEGER NOT NULL DEFAULT 0`, `ALTER TABLE plans ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ NOT NULL DEFAULT now()`, `ALTER TABLE plans ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ NOT NULL DEFAULT now()`,
     `ALTER TABLE feature_definitions ADD COLUMN IF NOT EXISTS label TEXT`, `ALTER TABLE feature_definitions ADD COLUMN IF NOT EXISTS description TEXT`,
     `ALTER TABLE feature_definitions ADD COLUMN IF NOT EXISTS value_type TEXT NOT NULL DEFAULT 'boolean'`, `ALTER TABLE feature_definitions ADD COLUMN IF NOT EXISTS enabled BOOLEAN NOT NULL DEFAULT true`, `ALTER TABLE feature_definitions ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ NOT NULL DEFAULT now()`,
+<<<<<<< HEAD
     `ALTER TABLE campaign_recipients ADD COLUMN IF NOT EXISTS data JSONB NOT NULL DEFAULT '{}'::jsonb`,
     `ALTER TABLE campaigns ADD COLUMN IF NOT EXISTS track_opens BOOLEAN NOT NULL DEFAULT false`,
     `ALTER TABLE campaign_recipients ADD COLUMN IF NOT EXISTS opened_at TIMESTAMPTZ`,
     `ALTER TABLE campaign_recipients ADD COLUMN IF NOT EXISTS open_count INTEGER NOT NULL DEFAULT 0`
+=======
+    `ALTER TABLE campaign_recipients ADD COLUMN IF NOT EXISTS data JSONB NOT NULL DEFAULT '{}'::jsonb`
+>>>>>>> 1746cfb0b4be2466d6a641c914bc163004032b42
   ];
   for (const sql of migrations) await client.query(sql);
 
