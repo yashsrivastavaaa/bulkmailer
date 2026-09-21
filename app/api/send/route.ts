@@ -6,7 +6,6 @@ import { upsertUser } from '@/lib/app-user';
 export const runtime='nodejs';
 const emailRe=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 function sameOrigin(req:NextRequest){const origin=req.headers.get('origin');if(!origin)return true;return origin===new URL(req.url).origin}
-<<<<<<< HEAD
 function trackingOrigin(req:NextRequest){
  const configured=process.env.APP_URL?.trim().replace(/\/$/,'');
  if(configured)return configured;
@@ -14,8 +13,6 @@ function trackingOrigin(req:NextRequest){
  const protocol=req.headers.get('x-forwarded-proto')||new URL(req.url).protocol.replace(':','');
  return host?`${protocol}://${host}`:new URL(req.url).origin;
 }
-=======
->>>>>>> 1746cfb0b4be2466d6a641c914bc163004032b42
 export async function POST(req:NextRequest){
  if(!sameOrigin(req))return NextResponse.json({error:'Invalid request origin.'},{status:403});
  const session=await getSession();if(!session)return NextResponse.json({error:'Connect Gmail first.'},{status:401});
@@ -25,16 +22,12 @@ export async function POST(req:NextRequest){
   if(!emailRe.test(to))return NextResponse.json({error:`Invalid recipient: ${to}`},{status:400}); if(!subject)return NextResponse.json({error:'Subject is required.'},{status:400}); if(!html)return NextResponse.json({error:'Email body is required.'},{status:400});
   const attachment=body.attachment?{filename:String(body.attachment.filename||'attachment'),contentType:String(body.attachment.contentType||'application/octet-stream'),data:String(body.attachment.data||'')}:undefined;
   if(attachment&&attachment.data.length>5_800_000)return NextResponse.json({error:'Attachment is too large for this deployment flow.'},{status:400});
-<<<<<<< HEAD
   let trackedHtml=html;
   if(body.trackOpen&&body.campaignId){
    const recipient=await query<{id:string}>(`SELECT id FROM campaign_recipients WHERE campaign_id=$1 AND lower(email)=lower($2) LIMIT 1`,[body.campaignId,to]);
    if(recipient.rows[0]){const origin=trackingOrigin(req);if(/localhost|127\.0\.0\.1/i.test(origin))throw new Error('Open tracking needs a publicly reachable APP_URL. Configure APP_URL after deploying the app, then send a new tracked campaign.');trackedHtml+=`<img src="${origin}/api/track/open/${recipient.rows[0].id}" width="1" height="1" alt="" style="display:none" />`;}
   }
   const id=await sendEmail({refreshToken:session.refreshToken,to,subject,html:trackedHtml,attachment});
-=======
-  const id=await sendEmail({refreshToken:session.refreshToken,to,subject,html,attachment});
->>>>>>> 1746cfb0b4be2466d6a641c914bc163004032b42
   if(body.campaignId){
    await query(`UPDATE campaign_recipients SET status='sent',provider_message_id=$1,sent_at=now(),last_attempt_at=now() WHERE campaign_id=$2 AND email=$3`,[id,body.campaignId,to]);
    await query(`UPDATE campaigns SET sent_count=sent_count+1 WHERE id=$1`,[body.campaignId]);
