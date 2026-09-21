@@ -1,0 +1,3 @@
+export default function Terms() {
+  return <main className="page prose"><h1>Terms of Service</h1><p>Bulkmailer is an email-sending utility. You are responsible for the recipient lists, message content, attachments, and your compliance with applicable laws and Gmail policies.</p><h2>Acceptable use</h2><p>Do not use Bulkmailer for spam, phishing, impersonation, unlawful content, or unsolicited messages that violate applicable rules.</p><h2>Google account</h2><p>You authorize Bulkmailer to act on the Gmail account you connect. You can revoke access from your Google Account or disconnect it from the application.</p><h2>Contact</h2><p>Contact the app operator through the developer email configured in Google Cloud.</p></main>
+}
